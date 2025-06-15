@@ -562,7 +562,7 @@ map.on('load', () => {
     map.addSource('gee-layer', {
       type: 'raster',
       tiles: [
-        'https://earthengine.googleapis.com/v1/projects/ee-michalmodelski/maps/52bafa3c11ca13d0bbc10d4d1c26ee60-79201ce57368c60e2f319bd926da054b/tiles/{z}/{x}/{y}'
+        'https://earthengine.googleapis.com/v1/projects/ee-michalmodelski/maps/52bafa3c11ca13d0bbc10d4d1c26ee60-317599d3df3d70c796336637a350382c/tiles/{z}/{x}/{y}'
       ],
       tileSize: 256
     });
