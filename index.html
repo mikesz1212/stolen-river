@@ -12,7 +12,7 @@
       overflow: hidden;
       height: 100%;
     }
-    body { margin: 0; padding: 0; font-family: 'Space Grotesk', sans-serif; }
+    body { margin: 0; padding: 0; font-family: 'Helvetica', 'Arial', sans-serif;}
     #map {
       position: absolute;
       top: 0;
@@ -34,7 +34,7 @@
       padding: 8px 12px;
       border-radius: 6px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Helvetica', 'Arial', sans-serif;
       font-size: 13px;
       max-width: 220px;
       max-height: 220px;
@@ -56,7 +56,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Helvetica', 'Arial', sans-serif;
       font-size: 14px;
       box-sizing: border-box;
     }
@@ -100,7 +100,7 @@
     #date-label {
       min-width: 80px;
       text-align: right;
-      font-weight: 600;
+      font-weight: lighter;
       color: #111;
     }
 
@@ -112,12 +112,14 @@
       height: 1900vh;
       background: rgba(0, 0, 0, 0.9);
       padding: 24px;
-      overflow-y: visible;
+      overflow-y: auto;
       border-left: 1px solid #eeeeee;
-      z-index: 2;
+      z-index: 999;
       color: #f1f1f1;
       font-size: 14px;
       line-height: 1.6;
+      font-weight: lighter;
+
     }
 
     #info-panel h3 {
@@ -134,7 +136,6 @@
       color: #50baff;
       text-decoration: underline;
     }
-    
     #zoom-to-location {
       position: absolute;
       top: 850px;
@@ -146,7 +147,7 @@
       border: 1px solid #444;
       border-radius: 4px;
       cursor: pointer;
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Helvetica', 'Arial', sans-serif;
       font-size: 14px;
       width: 200px;
     }
@@ -201,7 +202,7 @@
     .popup-content h3 {
       font-size: 16px;
       margin: 0 0 6px;
-      font-weight: 700;
+      font-weight: lighter;
     }
 
     .popup-content .label {
@@ -209,7 +210,7 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
       margin-top: 6px;
-      font-weight: 600;
+      font-weight: lighter;
     }
 
     .popup-content p {
@@ -226,7 +227,7 @@
       align-items: center;
       gap: 10px;
       margin: 6px 0;
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Helvetica', 'Arial', sans-serif;
     }
 
     .switch input {
@@ -288,6 +289,18 @@
       overflow-y: auto;
     }
 
+    .country-label {
+      background-color: #c40000;
+      color: white;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: lighter;
+      border-radius: 0px;
+      white-space: nowrap;
+      box-shadow: 0 0 2px rgba(0,0,0,0.5);
+      font-family: 'Helvetica', 'Arial', sans-serif;
+    }
+
 
   </style>
 </head>
@@ -297,25 +310,25 @@
 
 
   <label class="switch">
-    <input type="checkbox" id="toggle-transaction-lines" checked />
+    <input type="checkbox" id="toggle-transaction-lines" />
     <span class="slider"></span>
     <span class="label-text">Transaction network (Top 5)</span>
   </label>
 
   <label class="switch">
-    <input type="checkbox" id="toggle-gee" checked />
+    <input type="checkbox" id="toggle-gee"  />
     <span class="slider"></span>
     <span class="label-text">Groundwater</span>
   </label>
 
-  <label class="switch">
-    <input type="checkbox" id="toggle-gee-2" checked />
-    <span class="slider"></span>
-    <span class="label-text">Water Risk</span>
-  </label>
+<!--  <label class="switch">-->
+<!--    <input type="checkbox" id="toggle-gee-2"  />-->
+<!--    <span class="slider"></span>-->
+<!--    <span class="label-text">Water Risk</span>-->
+<!--  </label>-->
 
   <label class="switch">
-    <input type="checkbox" id="toggle-basins" checked />
+    <input type="checkbox" id="toggle-basins"  />
     <span class="slider"></span>
     <span class="label-text">Water-Stressed Basins</span>
   </label>
@@ -325,19 +338,19 @@
   <!-- Optional NDVI layer toggles -->
 
   <label class="switch">
-    <input type="checkbox" id="toggle-ndvi" checked />
+    <input type="checkbox" id="toggle-ndvi"  />
     <span class="slider"></span>
     <span class="label-text">Show NDVI</span>
   </label>
 
   <label class="switch">
-    <input type="checkbox" id="toggle-ndwi" checked />
+    <input type="checkbox" id="toggle-ndwi"  />
     <span class="slider"></span>
     <span class="label-text">Show NDWI</span>
   </label>
 
   <label class="switch">
-    <input type="checkbox" id="toggle-ndsi" checked />
+    <input type="checkbox" id="toggle-ndsi"  />
     <span class="slider"></span>
     <span class="label-text">Show NDSI</span>
   </label>
@@ -371,6 +384,7 @@
       <a href="mailto:toshka.monitor@protonmail.com" style="color: lightblue;">toshka.monitor@protonmail.com</a><br>
       <a href="https://twitter.com/toshkaatlas" target="_blank" style="color: lightblue;">@toshkaatlas</a> (Twitter/X)
     </p>
+    <p style="font-size: 1em; color: #666;"><em>Part of the “Stolen River” investigation by IAAC MUPD01 Students:<br> Luisa Torres, Maria Jose Schmidt, Michał Modelski</em></p>
   </div>
 </div>
 
