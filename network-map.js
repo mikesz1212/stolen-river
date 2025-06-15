@@ -298,6 +298,22 @@ fetch(url)
     const topBuyerCountries = getTopValues(topBuyers).map(d => d[0]);
     const [minLandSize, maxLandSize] = getMinMaxValues(topBuyers);
 
+    topBuyerCountries.forEach(country => {
+      const entry = data.find(d => d["Buyer country"] === country);
+      if (!entry) return;
+
+      const el = document.createElement('div');
+      el.className = 'country-label';
+      el.textContent = country;
+
+      new mapboxgl.Marker(el)
+        .setLngLat([
+          parseFloat(entry['Buyer_country_long']),
+          parseFloat(entry['Buyer_country_lat'])
+        ])
+        .addTo(map);
+    });
+
     // === Sellers Layer ===
     map.addSource('sellers', {
       type: 'geojson',
@@ -332,11 +348,14 @@ fetch(url)
       type: 'geojson',
       data: {
         type: "FeatureCollection",
-        features: data.map(d => ({
-          type: "Feature",
-          properties: {
-            totalTransactionSize: topBuyers[d["Buyer country"]]
-          },
+        features: data
+          .filter(d => topBuyerCountries.includes(d["Buyer country"]))
+          .map(d => ({
+            type: "Feature",
+            properties: {
+              totalTransactionSize: topBuyers[d["Buyer country"]],
+              label: d["Buyer country"]
+            },
           geometry: {
             type: "Point",
             coordinates: [
@@ -365,6 +384,27 @@ fetch(url)
       }
     });
 
+    // map.addLayer({
+    //   id: 'buyers-labels',
+    //   type: 'symbol',
+    //   source: 'buyers',
+    //   layout: {
+    //     'text-field': ['get', 'label'],
+    //     'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+    //     'text-size': 11,
+    //     'text-anchor': 'top',
+    //     'text-offset': [0, 1.2],
+    //     'text-padding': 2, // Adds space around the text
+    //     'text-justify': 'center'
+    //   },
+    //   paint: {
+    //     'text-color': '#ffffff',
+    //     'text-halo-color': '#c40000', // Red background
+    //     'text-halo-width': 6,
+    //     'text-halo-blur': 0
+    //   }
+    // });
+
     // === Lines from Buyer to Seller ===
     map.addSource('lines', {
       type: 'geojson',
@@ -392,13 +432,74 @@ fetch(url)
       id: "transaction-line",
       type: 'line',
       source: 'lines',
-      layout: { "line-cap": "round" },
+      layout: {
+        "line-cap": "round",
+        visibility: 'none'
+      },
       paint: {
         "line-color": "#FF0000",
         "line-width": 1,
         "line-opacity": 0.2
       }
     });
+    const toshkaBbox = {
+      type: "Feature",
+      geometry: {
+        type: "Polygon",
+        coordinates: [[[29.9472399478,22.1764145166],[32.4407111053,22.1764145166],[32.4407111053,23.7455104833],[29.9472399478,23.7455104833],[29.9472399478,22.1764145166]]]
+      }
+    };
+    map.addSource('toshka-bbox', {
+      type: 'geojson',
+      data: toshkaBbox
+    });
+
+    map.addLayer({
+      id: 'toshka-bbox-line',
+      type: 'line',
+      source: 'toshka-bbox',
+      paint: {
+        'line-color': '#f7ff00',
+        'line-width': 1
+      }
+    });
+
+    const toshkaLabel = {
+      type: "FeatureCollection",
+      features: [{
+        type: "Feature",
+        properties: {
+          title: "ROI: Toshka Project"
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [31.15, 23.7]  // Adjust this to be centered above the box
+        }
+      }]
+    };
+    map.addSource('toshka-label', {
+      type: 'geojson',
+      data: toshkaLabel
+    });
+
+    map.addLayer({
+      id: 'toshka-label-layer',
+      type: 'symbol',
+      source: 'toshka-label',
+      layout: {
+        'text-field': ['get', 'title'],
+        'text-size': 14,
+        'text-font': ['Arial Unicode MS Normal'],
+        'text-anchor': 'bottom',
+        'text-offset': [0, -0.5]
+      },
+      paint: {
+        'text-color': '#f7ff00',
+        'text-halo-width': 1
+      }
+    });
+
+
 
     // Move buyers layer to top
     map.on('idle', () => {
@@ -471,28 +572,33 @@ map.on('load', () => {
     map.addLayer({
       id: 'gee-layer',
       type: 'raster',
-      source: 'gee-layer'
+      source: 'gee-layer',
+      layout: { visibility: 'none' },
+      paint: {
+        'raster-opacity': 0.6
+      }
     });
   }
+map.setPaintProperty('gee-layer', 'raster-opacity', 0.3);
 
-  if (!map.getSource('gee-layer-2')) {
-    map.addSource('gee-layer-2', {
-      type: 'raster',
-      tiles: [
-        'https://earthengine.googleapis.com/v1/projects/ee-michalmodelski/maps/65417552e4c09e2801bf985e4ae29242-e778209da83fbda6becfde1246005a7e/tiles/{z}/{x}/{y}'
-      ],
-      tileSize: 256
-    });
-  }
-
-  if (!map.getLayer('gee-layer-2')) {
-    map.addLayer({
-      id: 'gee-layer-2',
-      type: 'raster',
-      source: 'gee-layer-2',
-      layout: { visibility: 'visible' }
-    });
-  }
+  // if (!map.getSource('gee-layer-2')) {
+  //   map.addSource('gee-layer-2', {
+  //     type: 'raster',
+  //     tiles: [
+  //       'https://earthengine.googleapis.com/v1/projects/ee-michalmodelski/maps/65417552e4c09e2801bf985e4ae29242-e778209da83fbda6becfde1246005a7e/tiles/{z}/{x}/{y}'
+  //     ],
+  //     tileSize: 256
+  //   });
+  // }
+  //
+  // if (!map.getLayer('gee-layer-2')) {
+  //   map.addLayer({
+  //     id: 'gee-layer-2',
+  //     type: 'raster',
+  //     source: 'gee-layer-2',
+  //     layout: { visibility: 'none' }
+  //   });
+  // }
 
   // === NDVI Layers ===
   ndviLayers.forEach(layer => {
@@ -632,7 +738,7 @@ map.on('load', () => {
   // Toggle for transaction lines and GEE raster layers
   toggle('transaction-line', 'toggle-transaction-lines');
   toggle('gee-layer', 'toggle-gee');
-  toggle('gee-layer-2', 'toggle-gee-2');
+  // toggle('gee-layer-2', 'toggle-gee-2');
 
   // Add NDVI layer toggles if you have checkboxes for them
   ndviLayers.forEach(layer => {
@@ -695,6 +801,8 @@ document.getElementById('toggle-basins').addEventListener('change', function () 
 
 
 
+
+
 // === Zoom to Location Button ===
 document.addEventListener('DOMContentLoaded', () => {
   const zoomButton = document.getElementById('zoom-to-location');
@@ -712,11 +820,37 @@ document.addEventListener('DOMContentLoaded', () => {
       const infoContent = document.getElementById('info-content');
       if (infoContent) {
         infoContent.innerHTML = `
-          <h4>Toshka Lakes</h4>
-          <p>
-            The Toshka Lakes are a series of man-made lakes in the Egyptian desert, created by overflow from Lake Nasser.
-            They play a key role in Egypt's water and agricultural strategy.
-          </p>
+          <h2>🌍 Toshka Lakes: Uncovering Extractive Agriculture</h2>
+
+          <p><strong>A Green Mirage?</strong><br>
+          Once dry desert, now a patchwork of emerald circles — the Toshka Lakes region tells a new story of rapid agricultural expansion. Fueled by Nile water and “fossil water” from the Nubian Sandstone Aquifer, vast center-pivot irrigation systems have reshaped this landscape. But at what cost?</p>
+
+          <h3>💧 Land & Water Grab</h3>
+          <p>Behind the lush satellite imagery lies a controversial truth: much of this land was acquired through opaque contracts by foreign corporations, with little regulation on water use. The Nile — lifeline of millions — is being silently siphoned off for large-scale export farming.</p>
+
+          <h3>🛰️ Satellite Evidence</h3>
+          <p>Using machine learning and Sentinel-2 imagery, we detected over <strong>800 pivot irrigation systems</strong> emerging in Toshka from 2015 to 2024. These agricultural machines, each hundreds of meters in diameter, extract enormous volumes of water — often without oversight or sustainable planning.</p>
+
+          <h3>⚠️ Environmental Consequences</h3>
+          <ul>
+            <li><strong>Water Depletion:</strong> Heavy reliance on Nile and aquifer water threatens long-term supply for Egypt’s population.</li>
+            <li><strong>Soil Salinization:</strong> Repeated irrigation in arid climates leads to salt buildup and reduced crop yields.</li>
+            <li><strong>Land Degradation:</strong> Over-irrigation damages the fragile desert soil, risking permanent loss of fertility.</li>
+          </ul>
+
+          <h3>🔥 Hotspot of Extraction</h3>
+          <p>Toshka has become a <strong>case study of extractive farming practices</strong> — where ROI and expansion come before environmental resilience. Our decade-long analysis maps the spread of irrigation and correlates it with vegetation health decline, water stress, and displacement risks.</p>
+
+          <h3>🔎 Explore the Map</h3>
+          <ul>
+            <li>Visualize the yearly growth of center-pivot systems.</li>
+            <li>Overlay water stress zones and land grab contracts.</li>
+            <li>Identify the environmental toll of unchecked agricultural expansion.</li>
+          </ul>
+
+
+
+
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Toshka_Lakes_satellite_image.jpg/800px-Toshka_Lakes_satellite_image.jpg"
                alt="Toshka Lakes Satellite Image"
                style="max-width: 100%; margin-top: 12px; border: 1px solid #ccc; border-radius: 4px;">
