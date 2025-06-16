@@ -562,7 +562,7 @@ map.on('load', () => {
     map.addSource('gee-layer', {
       type: 'raster',
       tiles: [
-        'https://earthengine.googleapis.com/v1/projects/ee-michalmodelski/maps/52bafa3c11ca13d0bbc10d4d1c26ee60-317599d3df3d70c796336637a350382c/tiles/{z}/{x}/{y}'
+        'https://earthengine.googleapis.com/v1/projects/ee-michalmodelski/maps/52bafa3c11ca13d0bbc10d4d1c26ee60-79201ce57368c60e2f319bd926da054b/tiles/{z}/{x}/{y}'
       ],
       tileSize: 256
     });
@@ -820,28 +820,28 @@ document.addEventListener('DOMContentLoaded', () => {
       const infoContent = document.getElementById('info-content');
       if (infoContent) {
         infoContent.innerHTML = `
-          <h2>🌍 Toshka Lakes: Uncovering Extractive Agriculture</h2>
+          <h4>🌍 Toshka Lakes: Uncovering Extractive Agriculture</h4>
 
           <p><strong>A Green Mirage?</strong><br>
           Once dry desert, now a patchwork of emerald circles — the Toshka Lakes region tells a new story of rapid agricultural expansion. Fueled by Nile water and “fossil water” from the Nubian Sandstone Aquifer, vast center-pivot irrigation systems have reshaped this landscape. But at what cost?</p>
 
-          <h3>💧 Land & Water Grab</h3>
+          <h4>💧 Land & Water Grab</h4>
           <p>Behind the lush satellite imagery lies a controversial truth: much of this land was acquired through opaque contracts by foreign corporations, with little regulation on water use. The Nile — lifeline of millions — is being silently siphoned off for large-scale export farming.</p>
 
-          <h3>🛰️ Satellite Evidence</h3>
+          <h4>🛰️ Satellite Evidence</h4>
           <p>Using machine learning and Sentinel-2 imagery, we detected over <strong>800 pivot irrigation systems</strong> emerging in Toshka from 2015 to 2024. These agricultural machines, each hundreds of meters in diameter, extract enormous volumes of water — often without oversight or sustainable planning.</p>
 
-          <h3>⚠️ Environmental Consequences</h3>
+          <h4>⚠️ Environmental Consequences</h4>
           <ul>
             <li><strong>Water Depletion:</strong> Heavy reliance on Nile and aquifer water threatens long-term supply for Egypt’s population.</li>
             <li><strong>Soil Salinization:</strong> Repeated irrigation in arid climates leads to salt buildup and reduced crop yields.</li>
             <li><strong>Land Degradation:</strong> Over-irrigation damages the fragile desert soil, risking permanent loss of fertility.</li>
           </ul>
 
-          <h3>🔥 Hotspot of Extraction</h3>
+          <h4>🔥 Hotspot of Extraction</h4>
           <p>Toshka has become a <strong>case study of extractive farming practices</strong> — where ROI and expansion come before environmental resilience. Our decade-long analysis maps the spread of irrigation and correlates it with vegetation health decline, water stress, and displacement risks.</p>
 
-          <h3>🔎 Explore the Map</h3>
+          <h4>🔎 Explore the Map</h4>
           <ul>
             <li>Visualize the yearly growth of center-pivot systems.</li>
             <li>Overlay water stress zones and land grab contracts.</li>
@@ -851,9 +851,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Toshka_Lakes_satellite_image.jpg/800px-Toshka_Lakes_satellite_image.jpg"
-               alt="Toshka Lakes Satellite Image"
-               style="max-width: 100%; margin-top: 12px; border: 1px solid #ccc; border-radius: 4px;">
+
         `;
       }
     });
